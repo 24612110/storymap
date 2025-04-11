@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
     try {
-        await mongoose.connect('mongodb://127.0.0.1:27017/storymapjs', {
+        await mongoose.connect('mongodb+srv://dinhbao01012006:78oo4flWd0ZfAblk@cluster0.pw5mn.mongodb.net/storymapjs', {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             serverSelectionTimeoutMS: 5000,
