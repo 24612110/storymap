@@ -91,7 +91,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-        mongoUrl: 'mongodb://127.0.0.1:27017/storymapjs',
+        mongoUrl: 'mongodb+srv://dinhbao01012006:78oo4flWd0ZfAblk@cluster0.pw5mn.mongodb.net/storymapjs',
         collection: 'sessions'
     }),
     cookie: {
