@@ -1,0 +1,250 @@
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Bảng điều khiển</h1>
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-download fa-sm text-white-50 me-2"></i>Xuất dữ liệu
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="exportDropdown">
+            <li><a class="dropdown-item" href="/admin/export/users?format=excel"><i class="fas fa-file-excel me-2"></i>Xuất người dùng (Excel)</a></li>
+            <li><a class="dropdown-item" href="/admin/export/users?format=csv"><i class="fas fa-file-csv me-2"></i>Xuất người dùng (CSV)</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/admin/export/posts?format=excel"><i class="fas fa-file-excel me-2"></i>Xuất bài đăng (Excel)</a></li>
+            <li><a class="dropdown-item" href="/admin/export/posts?format=csv"><i class="fas fa-file-csv me-2"></i>Xuất bài đăng (CSV)</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/admin/export/report?format=excel"><i class="fas fa-chart-bar me-2"></i>Xuất báo cáo thống kê (Excel)</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Tổng số người dùng</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{stats.userCount}}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-users fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Tổng số bài đăng</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{stats.postCount}}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-map-marker-alt fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Bài đăng chờ duyệt</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{stats.pendingCount}}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-clock fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Bài đăng đã duyệt</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{stats.approvedCount}}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-6 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Người dùng mới (tháng này)</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{stats.newUsersThisMonth}}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-user-plus fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Bài đăng mới (tháng này)</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{stats.newPostsThisMonth}}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Map of Posts -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-primary">Bản đồ bài đăng</h6>
+        <div class="dropdown">
+            <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="mapFilterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                Lọc
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="mapFilterDropdown">
+                <li><a class="dropdown-item map-filter active" data-filter="all" href="#">Tất cả</a></li>
+                <li><a class="dropdown-item map-filter" data-filter="pending" href="#">Đang chờ duyệt</a></li>
+                <li><a class="dropdown-item map-filter" data-filter="approved" href="#">Đã duyệt</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div id="admin-map" style="height: 400px;"></div>
+    </div>
+</div>
+
+<!-- Top Countries -->
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <!-- Top 10 Countries -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Top 10 quốc gia có nhiều bài đăng nhất</h6>
+            </div>
+            <div class="card-body">
+                {{#if topCountries.length}}
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Quốc gia</th>
+                                <th>Số lượng bài đăng</th>
+                                <th>Tỷ lệ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each topCountries}}
+                            <tr>
+                                <td>
+                                    {{#if this.code}}
+                                    <span class="fi fi-{{this.code}}" style="margin-right: 5px;"></span>
+                                    {{/if}}
+                                    {{this.name}}
+                                </td>
+                                <td>{{this.count}}</td>
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" style="width: {{this.percentage}}%;" 
+                                            aria-valuenow="{{this.percentage}}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+                {{else}}
+                <div class="text-center py-4">
+                    <i class="fas fa-globe-asia text-info fa-3x mb-3"></i>
+                    <p class="mb-0">Chưa có dữ liệu quốc gia.</p>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 mb-4">
+        <!-- Country Distribution Chart -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Phân bố bài đăng theo quốc gia</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-pie pt-4 pb-2">
+                    <canvas id="countriesChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Bài đăng gần đây</h6>
+    </div>
+    <div class="card-body">
+        {{#if recentPosts.length}}
+        <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Tiêu đề</th>
+                        <th>Tác giả</th>
+                        <th>Trạng thái</th>
+                        <th>Ngày tạo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each recentPosts}}
+                    <tr>
+                        <td>{{this.title}}</td>
+                        <td>{{this.author.username}}</td>
+                        <td>
+                            {{#if this.isPending}}
+                            <span class="badge bg-warning text-dark">Chờ duyệt</span>
+                            {{else}}
+                            <span class="badge bg-success">Đã duyệt</span>
+                            {{/if}}
+                        </td>
+                        <td>{{formatDate this.createdAt}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        {{else}}
+        <div class="text-center py-4">
+            <i class="fas fa-info-circle text-info fa-3x mb-3"></i>
+            <p class="mb-0">Chưa có bài đăng nào.</p>
+        </div>
+        {{/if}}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    window.isDashboardWithMap = true;
+    
+    window.mapPosts = {{{mapPosts}}};
+    window.topCountries = {{{jsonTopCountries}}};
+});
+</script>

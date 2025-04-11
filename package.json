@@ -1,0 +1,35 @@
+{
+  "name": "storymapjs",
+  "version": "1.0.0",
+  "description": "Interactive story map application",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "connect-mongo": "^4.6.0",
+    "csurf": "^1.11.0",
+    "dotenv": "^16.4.7",
+    "exceljs": "^4.4.0",
+    "express": "^4.17.1",
+    "express-session": "^1.18.1",
+    "hbs": "^4.1.2",
+    "helmet": "^4.6.0",
+    "json2csv": "^6.0.0-alpha.2",
+    "mongoose": "^6.0.12",
+    "multer": "^1.4.3",
+    "node-fetch": "^3.3.2",
+    "passport": "^0.5.0",
+    "passport-local": "^1.0.0",
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.14"
+  }
+}

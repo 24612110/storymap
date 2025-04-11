@@ -1,0 +1,57 @@
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <i class="fas fa-map-marked-alt me-2"></i>StoryMap
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                {{#if user}}
+                    <li class="nav-item me-2">
+                        <a class="nav-link" href="/map">
+                            <i class="fas fa-map me-1"></i> Bản đồ
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle me-1"></i> {{user.username}}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li>
+                                <a class="dropdown-item" href="/user/profile">
+                                    <i class="fas fa-id-card me-2"></i>Hồ sơ của tôi
+                                </a>
+                            </li>
+                            {{#if user.isAdmin}}
+                            <li>
+                                <a class="dropdown-item" href="/admin">
+                                    <i class="fas fa-cogs me-2"></i>Quản trị viên
+                                </a>
+                            </li>
+                            {{/if}}
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" href="/auth/logout">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                {{else}}
+                    <li class="nav-item me-2">
+                        <a class="nav-link" href="/login">
+                            <i class="fas fa-sign-in-alt me-1"></i> Đăng nhập
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-light px-3" href="/register">
+                            <i class="fas fa-user-plus me-1"></i> Đăng ký
+                        </a>
+                    </li>
+                {{/if}}
+            </ul>
+        </div>
+    </div>
+</nav>

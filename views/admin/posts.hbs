@@ -1,0 +1,569 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Quản lý Bài đăng</h1>
+    <div class="d-flex">
+        <div class="dropdown me-2">
+            <button class="btn btn-info dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-download me-1"></i> Xuất
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="exportDropdown">
+                <li><a class="dropdown-item" href="/admin/export/posts?format=excel"><i class="fas fa-file-excel me-2"></i>Excel</a></li>
+                <li><a class="dropdown-item" href="/admin/export/posts?format=csv"><i class="fas fa-file-csv me-2"></i>CSV</a></li>
+            </ul>
+        </div>
+        <button class="btn btn-outline-primary me-2" id="showPendingBtn">
+            Đang chờ <span class="badge bg-danger">{{pendingCount}}</span>
+        </button>
+        <button class="btn btn-outline-success" id="showApprovedBtn">Đã duyệt</button>
+    </div>
+</div>
+<div id="pendingPosts" class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-primary">Bài đăng đang chờ duyệt</h6>
+    </div>
+    <div class="card-body">
+        {{#if pendingPosts.length}}
+        <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">Ảnh</th>
+                        <th>Tiêu đề</th>
+                        <th>Tác giả</th>
+                        <th>Ngày tạo</th>
+                        <th style="width: 120px;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each pendingPosts}}
+                    <tr>
+                        <td>
+                            {{#if this.image}}
+                                <div class="post-thumbnail" style="background-image: url('{{this.image}}')"></div>
+                            {{else}}
+                                <div class="post-thumbnail no-image">
+                                    <i class="fas fa-image text-muted"></i>
+                                </div>
+                            {{/if}}
+                        </td>
+                        <td>
+                            <a href="#" class="post-title viewBtn" data-id="{{this._id}}">{{this.title}}</a>
+                        </td>
+                        <td>{{this.author.username}}</td>
+                        <td>{{formatDate this.createdAt}}</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <button class="btn btn-sm btn-primary viewBtn" data-id="{{this._id}}" title="Xem chi tiết">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-success approveBtn" data-id="{{this._id}}" title="Duyệt">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger rejectBtn" data-id="{{this._id}}" title="Từ chối">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        {{else}}
+        <div class="text-center py-4">
+            <i class="fas fa-check-circle text-success fa-3x mb-3"></i>
+            <p class="mb-0">Không có bài đăng nào đang chờ duyệt.</p>
+        </div>
+        {{/if}}
+    </div>
+</div>
+<div id="approvedPosts" class="card shadow mb-4" style="display: none;">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-success">Bài đăng đã duyệt</h6>
+    </div>
+    <div class="card-body">
+        {{#if approvedPosts.length}}
+        <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">Ảnh</th>
+                        <th>Tiêu đề</th>
+                        <th>Tác giả</th>
+                        <th>Ngày tạo</th>
+                        <th style="width: 100px;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each approvedPosts}}
+                    <tr>
+                        <td>
+                            {{#if this.image}}
+                                <div class="post-thumbnail" style="background-image: url('{{this.image}}')"></div>
+                            {{else}}
+                                <div class="post-thumbnail no-image">
+                                    <i class="fas fa-image text-muted"></i>
+                                </div>
+                            {{/if}}
+                        </td>
+                        <td>
+                            <a href="#" class="post-title viewBtn" data-id="{{this._id}}">{{this.title}}</a>
+                        </td>
+                        <td>{{this.author.username}}</td>
+                        <td>{{formatDate this.createdAt}}</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <button class="btn btn-sm btn-primary viewBtn" data-id="{{this._id}}" title="Xem chi tiết">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger deleteBtn" data-id="{{this._id}}" title="Xóa">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        {{else}}
+        <div class="text-center py-4">
+            <i class="fas fa-info-circle text-info fa-3x mb-3"></i>
+            <p class="mb-0">Không có bài đăng nào đã được duyệt.</p>
+        </div>
+        {{/if}}
+    </div>
+</div>
+<div class="modal fade" id="postViewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="postModalTitle">Chi tiết bài đăng</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <div class="post-image-container text-center"></div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <strong>Nội dung bài đăng</strong>
+                            </div>
+                            <div class="card-body" id="postContent"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <strong>Thông tin tác giả</strong>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Tên người dùng:</strong> <span id="postAuthor"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <strong>Thông tin bài đăng</strong>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Ngày tạo:</strong> <span id="postDate"></span></p>
+                                <p><strong>Trạng thái:</strong> <span id="postStatus"></span></p>
+                                <p id="postLocation"><strong>Vị trí:</strong> <span id="postCoordinates"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <div id="actionButtons"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="rejectModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Từ chối bài đăng</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="rejectForm">
+                    <input type="hidden" id="rejectPostId" name="postId">
+                    <div class="mb-3">
+                        <label for="rejectionReason" class="form-label">Lý do từ chối</label>
+                        <textarea id="rejectionReason" name="reason" class="form-control" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-danger" id="confirmReject">Từ chối</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Post thumbnail styles */
+.post-thumbnail {
+    width: 50px;
+    height: 50px;
+    border-radius: 6px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.post-thumbnail.no-image {
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+.post-title {
+    color: #4f46e5;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.post-title:hover {
+    text-decoration: underline;
+    color: #4338ca;
+}
+
+/* Modal image styles */
+.modal-image {
+    max-width: 100%;
+    max-height: 400px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.image-container {
+    margin-bottom: 1.5rem;
+}
+
+.no-image-placeholder {
+    background-color: #f8f9fa;
+    height: 200px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+}
+
+.no-image-placeholder i {
+    font-size: 3rem;
+}
+
+/* Status badges */
+.status-badge {
+    padding: 0.35em 0.65em;
+    border-radius: 10px;
+    font-size: 0.75em;
+    font-weight: 600;
+}
+
+/* Image zoom effect */
+.zoomable-image {
+    cursor: zoom-in;
+    transition: transform 0.3s ease;
+}
+
+.zoomable-image:hover {
+    transform: scale(1.05);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const pendingPostsSection = document.getElementById('pendingPosts');
+    const approvedPostsSection = document.getElementById('approvedPosts');
+    const showPendingBtn = document.getElementById('showPendingBtn');
+    const showApprovedBtn = document.getElementById('showApprovedBtn');
+    
+    showPendingBtn.addEventListener('click', function() {
+        pendingPostsSection.style.display = 'block';
+        approvedPostsSection.style.display = 'none';
+        showPendingBtn.classList.add('btn-primary');
+        showPendingBtn.classList.remove('btn-outline-primary');
+        showApprovedBtn.classList.add('btn-outline-success');
+        showApprovedBtn.classList.remove('btn-success');
+    });
+    
+    showApprovedBtn.addEventListener('click', function() {
+        pendingPostsSection.style.display = 'none';
+        approvedPostsSection.style.display = 'block';
+        showApprovedBtn.classList.add('btn-success');
+        showApprovedBtn.classList.remove('btn-outline-success');
+        showPendingBtn.classList.add('btn-outline-primary');
+        showPendingBtn.classList.remove('btn-primary');
+    });
+    const approveBtns = document.querySelectorAll('.approveBtn');
+    approveBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const postId = this.dataset.id;
+            if (confirm('Bạn có chắc chắn muốn duyệt bài đăng này?')) {
+                approvePost(postId);
+            }
+        });
+    });
+    const rejectBtns = document.querySelectorAll('.rejectBtn');
+    const rejectModal = new bootstrap.Modal(document.getElementById('rejectModal'));
+    
+    rejectBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const postId = this.dataset.id;
+            document.getElementById('rejectPostId').value = postId;
+            rejectModal.show();
+        });
+    });
+    document.getElementById('confirmReject').addEventListener('click', function() {
+        const postId = document.getElementById('rejectPostId').value;
+        const reason = document.getElementById('rejectionReason').value;
+        
+        // Add validation to ensure reason is provided
+        if (!reason.trim()) {
+            alert('Vui lòng nhập lý do từ chối bài đăng.');
+            return;
+        }
+        
+        rejectPost(postId, reason);
+        rejectModal.hide();
+    });
+    const deleteBtns = document.querySelectorAll('.deleteBtn');
+    deleteBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const postId = this.dataset.id;
+            if (confirm('Bạn có chắc chắn muốn xóa bài đăng này? Hành động này không thể hoàn tác.')) {
+                deletePost(postId);
+            }
+        });
+    });
+    const viewBtns = document.querySelectorAll('.viewBtn');
+    const postViewModal = new bootstrap.Modal(document.getElementById('postViewModal'));
+    
+    viewBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const postId = this.dataset.id;
+            viewPostDetails(postId);
+        });
+    });
+    
+    async function viewPostDetails(postId) {
+        try {
+            const response = await fetch(`/admin/posts/${postId}`);
+            
+            if (!response.ok) {
+                throw new Error('Failed to fetch post details');
+            }
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                const post = data.post;
+                
+                document.getElementById('postModalTitle').textContent = post.title;
+                document.getElementById('postContent').textContent = post.content;
+                document.getElementById('postAuthor').textContent = post.author ? post.author.username : 'Unknown';
+                document.getElementById('postDate').textContent = formatDate(post.createdAt);
+                
+                const statusElement = document.getElementById('postStatus');
+                statusElement.innerHTML = post.isPending ? 
+                    '<span class="badge bg-warning text-dark">Đang chờ duyệt</span>' : 
+                    '<span class="badge bg-success">Đã duyệt</span>';
+                
+                if (post.location && post.location.coordinates) {
+                    const lat = post.location.coordinates[1].toFixed(6);
+                    const lng = post.location.coordinates[0].toFixed(6);
+                    document.getElementById('postCoordinates').textContent = `${lat}, ${lng}`;
+                    
+                    const mapLink = document.createElement('a');
+                    mapLink.href = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=15/${lat}/${lng}`;
+                    mapLink.target = "_blank";
+                    mapLink.classList.add("ms-2", "small");
+                    mapLink.innerHTML = '<i class="fas fa-map-marker-alt"></i> Xem trên bản đồ';
+                    document.getElementById('postCoordinates').appendChild(mapLink);
+                } else {
+                    document.getElementById('postLocation').style.display = 'none';
+                }
+                
+                const imageContainer = document.querySelector('.post-image-container');
+                if (post.image) {
+                    imageContainer.innerHTML = `
+                        <div class="image-container">
+                            <img src="${post.image}" class="modal-image zoomable-image" alt="${post.title}">
+                        </div>
+                    `;
+                    
+                    const postImage = imageContainer.querySelector('img');
+                    postImage.addEventListener('click', function() {
+                        window.open(post.image, '_blank');
+                    });
+                } else {
+                    imageContainer.innerHTML = `
+                        <div class="no-image-placeholder mb-3">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <p class="text-muted">Bài đăng này không có hình ảnh</p>
+                    `;
+                }
+                
+                const actionButtons = document.getElementById('actionButtons');
+                if (post.isPending) {
+                    actionButtons.innerHTML = `
+                        <button class="btn btn-success me-2 modal-approve-btn" data-id="${post._id}">
+                            <i class="fas fa-check me-1"></i> Duyệt
+                        </button>
+                        <button class="btn btn-danger modal-reject-btn" data-id="${post._id}">
+                            <i class="fas fa-times me-1"></i> Từ chối
+                        </button>
+                    `;
+                    
+                    const modalApproveBtn = actionButtons.querySelector('.modal-approve-btn');
+                    modalApproveBtn.addEventListener('click', function() {
+                        const postId = this.dataset.id;
+                        if (confirm('Bạn có chắc chắn muốn duyệt bài đăng này?')) {
+                            approvePost(postId);
+                            postViewModal.hide();
+                        }
+                    });
+                    
+                    const modalRejectBtn = actionButtons.querySelector('.modal-reject-btn');
+                    modalRejectBtn.addEventListener('click', function() {
+                        const postId = this.dataset.id;
+                        document.getElementById('rejectPostId').value = postId;
+                        postViewModal.hide();
+                        rejectModal.show();
+                    });
+                } else {
+                    actionButtons.innerHTML = `
+                        <button class="btn btn-danger modal-delete-btn" data-id="${post._id}">
+                            <i class="fas fa-trash me-1"></i> Xóa
+                        </button>
+                    `;
+                    
+                    const modalDeleteBtn = actionButtons.querySelector('.modal-delete-btn');
+                    modalDeleteBtn.addEventListener('click', function() {
+                        const postId = this.dataset.id;
+                        if (confirm('Bạn có chắc chắn muốn xóa bài đăng này? Hành động này không thể hoàn tác.')) {
+                            deletePost(postId);
+                            postViewModal.hide();
+                        }
+                    });
+                }
+                
+                postViewModal.show();
+            } else {
+                alert('Không thể tải chi tiết bài đăng.');
+            }
+        } catch (error) {
+            console.error('Error fetching post details:', error);
+            alert('Có lỗi xảy ra khi tải chi tiết bài đăng.');
+        }
+    }
+    
+    function formatDate(dateString) {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('vi-VN', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+    
+    async function approvePost(postId) {
+        try {
+            const response = await fetch(`/admin/posts/${postId}/approve`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                alert('Có lỗi xảy ra khi duyệt bài đăng.');
+            }
+        } catch (error) {
+            console.error('Error approving post:', error);
+            alert('Có lỗi xảy ra khi duyệt bài đăng.');
+        }
+    }
+    
+    async function rejectPost(postId, reason) {
+        try {
+            // Show loading state
+            const rejectBtn = document.getElementById('confirmReject');
+            const originalText = rejectBtn.innerHTML;
+            rejectBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Đang xử lý...';
+            rejectBtn.disabled = true;
+            
+            const response = await fetch(`/admin/posts/${postId}/reject`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ reason: reason })
+            });
+            
+            // Reset button state
+            rejectBtn.innerHTML = originalText;
+            rejectBtn.disabled = false;
+            
+            if (response.ok) {
+                // Get response data
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Show success notification
+                    alert('Bài đăng đã bị từ chối thành công.');
+                    window.location.reload();
+                } else {
+                    alert(data.error || 'Có lỗi xảy ra khi từ chối bài đăng.');
+                }
+            } else {
+                const errorData = await response.json();
+                alert(errorData.error || 'Có lỗi xảy ra khi từ chối bài đăng.');
+            }
+        } catch (error) {
+            console.error('Error rejecting post:', error);
+            alert('Có lỗi xảy ra khi từ chối bài đăng.');
+        }
+    }
+    
+    async function deletePost(postId) {
+        try {
+            const response = await fetch(`/admin/posts/${postId}/delete`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                alert('Có lỗi xảy ra khi xóa bài đăng.');
+            }
+        } catch (error) {
+            console.error('Error deleting post:', error);
+            alert('Có lỗi xảy ra khi xóa bài đăng.');
+        }
+    }
+});
+</script>

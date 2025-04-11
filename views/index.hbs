@@ -1,0 +1,431 @@
+<div class="row">
+    <div class="col-lg-10 offset-lg-1 text-center">
+        <div class="hero-section py-5">
+            <h1 class="display-4 fw-bold mb-4 hero-title">Chia Sẻ Câu Chuyện Của Bạn Trên Bản Đồ</h1>
+            <p class="lead mb-4">StoryMap cho phép bạn ghim kỷ niệm, cuộc phiêu lưu và câu chuyện của mình vào vị trí chính xác trên bản đồ tương tác. Tải lên hình ảnh, chia sẻ trải nghiệm và khám phá những câu chuyện từ khắp nơi trên thế giới.</p>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                {{#if user}}
+                    <a href="/map" class="btn btn-primary btn-lg px-4"><i class="fas fa-map me-2"></i>Xem Bản Đồ</a>
+                {{else}}
+                    <a href="/login" class="btn btn-primary btn-lg px-4"><i class="fas fa-sign-in-alt me-2"></i>Đăng Nhập</a>
+                    <a href="/register" class="btn btn-outline-secondary btn-lg px-4"><i class="fas fa-user-plus me-2"></i>Đăng Ký</a>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Featured Stories Section -->
+{{!-- <section class="featured-stories py-5">
+    <div class="row mb-4 text-center">
+        <div class="col-lg-8 mx-auto">
+            <h2 class="fw-bold mb-3">Câu Chuyện Nổi Bật</h2>
+            <p class="text-muted">Khám phá những câu chuyện đặc sắc từ cộng đồng của chúng tôi</p>
+        </div>
+    </div>
+    
+    <div class="row g-4">
+        <div class="col-lg-4 col-md-6">
+            <div class="card story-card h-100">
+                <div class="card-img-top position-relative" style="height: 180px; overflow: hidden;">
+                    <img src="/images/featured/hanoi-old-quarter.jpg" alt="Phố cổ Hà Nội" class="w-100 h-100 object-fit-cover">
+                    <div class="location-badge">Hà Nội, Việt Nam</div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Kỷ niệm tại phố cổ Hà Nội</h5>
+                    <p class="card-text">Những con phố nhỏ ngập tràn hương vị ẩm thực và lịch sử, mang đến trải nghiệm không thể quên về văn hóa Việt Nam.</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted small"><i class="fas fa-user me-1"></i> Minh Nguyễn</span>
+                        <a href="/map" class="btn btn-sm btn-outline-primary">Xem trên bản đồ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6">
+            <div class="card story-card h-100">
+                <div class="card-img-top position-relative" style="height: 180px; overflow: hidden;">
+                    <img src="/images/featured/sapa-rice-fields.jpg" alt="Ruộng bậc thang Sa Pa" class="w-100 h-100 object-fit-cover">
+                    <div class="location-badge">Sa Pa, Việt Nam</div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Mùa vàng tại những thửa ruộng bậc thang</h5>
+                    <p class="card-text">Khung cảnh thiên nhiên tuyệt đẹp của những thửa ruộng bậc thang vào mùa lúa chín, tạo nên bức tranh ngoạn mục.</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted small"><i class="fas fa-user me-1"></i> Thu Hà</span>
+                        <a href="/map" class="btn btn-sm btn-outline-primary">Xem trên bản đồ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mx-auto">
+            <div class="card story-card h-100">
+                <div class="card-img-top position-relative" style="height: 180px; overflow: hidden;">
+                    <img src="/images/featured/halong-bay.jpg" alt="Vịnh Hạ Long" class="w-100 h-100 object-fit-cover">
+                    <div class="location-badge">Vịnh Hạ Long, Việt Nam</div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Khám phá kỳ quan thiên nhiên thế giới</h5>
+                    <p class="card-text">Hành trình khám phá vẻ đẹp kỳ vĩ của những hòn đảo đá vôi và hang động tuyệt đẹp tại Vịnh Hạ Long.</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted small"><i class="fas fa-user me-1"></i> Trung Hoàng</span>
+                        <a href="/map" class="btn btn-sm btn-outline-primary">Xem trên bản đồ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="text-center mt-4">
+        <a href="/map" class="btn btn-primary">Khám phá thêm câu chuyện <i class="fas fa-arrow-right ms-1"></i></a>
+    </div>
+</section> --}}
+
+<section class="features py-5">
+    <div class="row mb-5 text-center">
+        <div class="col-lg-8 mx-auto">
+            <h2 class="fw-bold mb-3">Khám phá và chia sẻ câu chuyện của bạn</h2>
+            <p class="text-muted">StoryMap cho phép bạn chia sẻ những kỷ niệm đáng nhớ gắn với địa điểm trên bản đồ thế giới.</p>
+        </div>
+    </div>
+    
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="feature-icon bg-primary text-white mx-auto mb-4">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <h5 class="card-title">Tạo câu chuyện dễ dàng</h5>
+                    <p class="card-text text-muted">Chỉ cần nhấp vào bất kỳ vị trí nào trên bản đồ để bắt đầu chia sẻ câu chuyện của bạn.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="feature-icon bg-secondary text-white mx-auto mb-4">
+                        <i class="fas fa-images"></i>
+                    </div>
+                    <h5 class="card-title">Thêm hình ảnh</h5>
+                    <p class="card-text text-muted">Làm phong phú câu chuyện của bạn bằng cách thêm hình ảnh để chia sẻ trải nghiệm một cách trực quan.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="feature-icon bg-info text-white mx-auto mb-4">
+                        <i class="fas fa-globe-asia"></i>
+                    </div>
+                    <h5 class="card-title">Kết nối toàn cầu</h5>
+                    <p class="card-text text-muted">Khám phá những câu chuyện thú vị từ khắp nơi trên thế giới và mở rộng tầm nhìn của bạn.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="how-it-works bg-light py-5 my-5 rounded">
+    <div class="row mb-4 text-center">
+        <div class="col-lg-8 mx-auto">
+            <h2 class="fw-bold mb-3">Cách thức hoạt động</h2>
+            <p class="text-muted">Ba bước đơn giản để bắt đầu chia sẻ câu chuyện của bạn</p>
+        </div>
+    </div>
+    
+    <div class="row g-4 justify-content-center">
+        <div class="col-md-4">
+            <div class="step text-center">
+                <div class="step-number">1</div>
+                <h5 class="mt-3">Tạo tài khoản</h5>
+                <p class="text-muted">Đăng ký miễn phí để truy cập vào bản đồ tương tác của chúng tôi</p>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="step text-center">
+                <div class="step-number">2</div>
+                <h5 class="mt-3">Đánh dấu điểm trên bản đồ</h5>
+                <p class="text-muted">Tìm và nhấp vào vị trí của câu chuyện bạn muốn chia sẻ</p>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="step text-center">
+                <div class="step-number">3</div>
+                <h5 class="mt-3">Viết câu chuyện của bạn</h5>
+                <p class="text-muted">Thêm tiêu đề, nội dung và hình ảnh cho câu chuyện của bạn</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats py-5">
+    <div class="row mb-4 text-center">
+        <div class="col-lg-8 mx-auto">
+            <h2 class="fw-bold mb-3">StoryMap trong con số</h2>
+            <p class="text-muted">Khám phá cộng đồng đang phát triển của chúng tôi</p>
+        </div>
+    </div>
+    
+    <div class="row g-4 text-center">
+        <div class="col-md-3 col-6">
+            <div class="stat-item">
+                <div class="stat-number">1,500+</div>
+                <div class="stat-label">Người dùng</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="stat-item">
+                <div class="stat-number">5,200+</div>
+                <div class="stat-label">Câu chuyện</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="stat-item">
+                <div class="stat-number">120+</div>
+                <div class="stat-label">Quốc gia</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="stat-item">
+                <div class="stat-number">12,000+</div>
+                <div class="stat-label">Hình ảnh</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="testimonials py-5">
+    <div class="row mb-4 text-center">
+        <div class="col-lg-8 mx-auto">
+            <h2 class="fw-bold mb-3">Người dùng nói gì về chúng tôi</h2>
+            <p class="text-muted">Trải nghiệm từ cộng đồng StoryMap</p>
+        </div>
+    </div>
+    
+    <div class="row g-4">
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 testimonial-card">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-quote-left fa-2x text-primary opacity-50"></i>
+                    </div>
+                    <p class="card-text mb-4">StoryMap giúp tôi lưu giữ những kỷ niệm tuyệt vời trong chuyến du lịch châu Âu. Giờ đây tôi có thể chia sẻ với bạn bè và gia đình một cách trực quan nhất.</p>
+                    <div class="d-flex align-items-center">
+                        <div class="avatar-circle bg-primary me-3" style="width: 50px; height: 50px;">
+                            <span class="avatar-initials" style="font-size: 1.5rem;">L</span>
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Lan Phạm</h6>
+                            <small class="text-muted">Blogger du lịch</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 testimonial-card">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-quote-left fa-2x text-primary opacity-50"></i>
+                    </div>
+                    <p class="card-text mb-4">Tôi đã dùng nhiều ứng dụng chia sẻ trải nghiệm du lịch nhưng StoryMap thực sự nổi bật với giao diện đẹp mắt và tính năng bản đồ tương tác vô cùng hữu ích.</p>
+                    <div class="d-flex align-items-center">
+                        <div class="avatar-circle bg-secondary me-3" style="width: 50px; height: 50px;">
+                            <span class="avatar-initials" style="font-size: 1.5rem;">T</span>
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Tuấn Vũ</h6>
+                            <small class="text-muted">Nhiếp ảnh gia</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mx-auto">
+            <div class="card h-100 testimonial-card">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-quote-left fa-2x text-primary opacity-50"></i>
+                    </div>
+                    <p class="card-text mb-4">Tính năng ghim vị trí chính xác trên bản đồ giúp tôi ghi lại hành trình du lịch xuyên Việt một cách chi tiết và thú vị, giúp bạn bè dễ dàng theo dõi.</p>
+                    <div class="d-flex align-items-center">
+                        <div class="avatar-circle bg-info me-3" style="width: 50px; height: 50px;">
+                            <span class="avatar-initials" style="font-size: 1.5rem;">H</span>
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Hương Trần</h6>
+                            <small class="text-muted">Người yêu du lịch</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta mt-5">
+    <div class="card">
+        <div class="card-body p-5 text-center">
+            <h3 class="mb-3">Sẵn sàng chia sẻ câu chuyện của bạn?</h3>
+            <p class="mb-4">Tham gia cộng đồng StoryMap ngay hôm nay và bắt đầu lưu giữ những kỷ niệm đáng nhớ của bạn.</p>
+            {{#if user}}
+                <a href="/map" class="btn btn-primary btn-lg px-5">Đi đến bản đồ</a>
+            {{else}}
+                <a href="/register" class="btn btn-primary btn-lg px-5">Đăng ký ngay</a>
+            {{/if}}
+        </div>
+    </div>
+</section>
+
+<style>
+.hero-title {
+    background: linear-gradient(to right, var(--primary), #6366f1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: var(--primary);
+}
+
+.feature-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.step-number {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(to right, var(--primary), #6366f1);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0 auto;
+    box-shadow: var(--shadow-sm);
+}
+
+.how-it-works {
+    position: relative;
+}
+
+.how-it-works::before {
+    content: '';
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    width: 80%;
+    height: 2px;
+    transform: translateX(-50%);
+    z-index: 0;
+}
+
+.story-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.story-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.location-badge {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.object-fit-cover {
+    object-fit: cover;
+}
+
+.stat-item {
+    padding: 2rem;
+    background-color: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease;
+}
+
+.stat-item:hover {
+    transform: translateY(-5px);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 1rem;
+    color: var(--gray);
+    font-weight: 500;
+}
+
+.testimonial-card {
+    border-radius: var(--radius);
+    border: none;
+    box-shadow: var(--shadow);
+}
+
+.testimonial-card:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+@media (max-width: 768px) {
+    .how-it-works::before {
+        display: none;
+    }
+    
+    .stat-number {
+        font-size: 1.75rem;
+    }
+    
+    .stat-label {
+        font-size: 0.875rem;
+    }
+    
+    .stat-item {
+        padding: 1rem;
+    }
+    
+    .hero-section {
+        padding: 2rem 0;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+}
+</style>
+
+<script>
+// Set isHomePage flag for the navbar
+document.addEventListener('DOMContentLoaded', function() {
+    window.isHomePage = true;
+});
+</script>

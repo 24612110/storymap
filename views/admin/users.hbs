@@ -1,0 +1,406 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Quản lý người dùng</h1>
+    <div class="d-flex">
+        <div class="dropdown me-2">
+            <button class="btn btn-info dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-download me-1"></i> Xuất
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="exportDropdown">
+                <li><a class="dropdown-item" href="/admin/export/users?format=excel"><i class="fas fa-file-excel me-2"></i>Excel</a></li>
+                <li><a class="dropdown-item" href="/admin/export/users?format=csv"><i class="fas fa-file-csv me-2"></i>CSV</a></li>
+            </ul>
+        </div>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createUserModal">
+            <i class="fas fa-user-plus me-1"></i> Thêm người dùng
+        </button>
+    </div>
+</div>
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-primary">Danh sách người dùng</h6>
+        <div class="input-group" style="width: 300px;">
+            <input type="text" class="form-control" id="userSearch" placeholder="Tìm kiếm người dùng...">
+            <button class="btn btn-outline-secondary" type="button" id="searchBtn">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        {{#if users.length}}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="usersTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên người dùng</th>
+                            <th>Vai trò</th>
+                            <th>Ngày tạo</th>
+                            <th>Bài viết</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each users}}
+                            <tr>
+                                <td>{{this._id}}</td>
+                                <td>{{this.username}}</td>
+                                <td>
+                                    {{#if this.isAdmin}}
+                                        <span class="badge bg-danger">Quản trị viên</span>
+                                    {{else}}
+                                        <span class="badge bg-info">Người dùng</span>
+                                    {{/if}}
+                                </td>
+                                <td>{{formatDate this.createdAt}}</td>
+                                <td>{{this.postCount}}</td>
+                                <td>
+                                    {{#if this.isActive}}
+                                        <span class="badge bg-success">Hoạt động</span>
+                                    {{else}}
+                                        <span class="badge bg-secondary">Khóa</span>
+                                    {{/if}}
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm btn-info view-user" data-id="{{this._id}}" data-bs-toggle="modal" data-bs-target="#viewUserModal">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-primary edit-user" data-id="{{this._id}}" data-bs-toggle="modal" data-bs-target="#editUserModal">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        {{#if this.isActive}}
+                                            <button class="btn btn-sm btn-warning toggle-status" data-id="{{this._id}}" data-action="deactivate">
+                                                <i class="fas fa-lock"></i>
+                                            </button>
+                                        {{else}}
+                                            <button class="btn btn-sm btn-success toggle-status" data-id="{{this._id}}" data-action="activate">
+                                                <i class="fas fa-lock-open"></i>
+                                            </button>
+                                        {{/if}}
+                                        <button class="btn btn-sm btn-danger delete-user" data-id="{{this._id}}" data-bs-toggle="modal" data-bs-target="#deleteUserModal">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-4">
+                <div>
+                    Hiển thị {{pagination.startIndex}} đến {{pagination.endIndex}} của {{pagination.totalItems}} người dùng
+                </div>
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <li class="page-item {{#unless pagination.hasPrevPage}}disabled{{/unless}}">
+                            <a class="page-link" href="/admin/users?page={{pagination.prevPage}}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        {{#each pagination.pages}}
+                            <li class="page-item {{#if this.isCurrentPage}}active{{/if}}">
+                                <a class="page-link" href="/admin/users?page={{this.pageNumber}}">{{this.pageNumber}}</a>
+                            </li>
+                        {{/each}}
+                        <li class="page-item {{#unless pagination.hasNextPage}}disabled{{/unless}}">
+                            <a class="page-link" href="/admin/users?page={{pagination.nextPage}}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        {{else}}
+            <div class="text-center py-4">
+                <i class="fas fa-users-slash text-info fa-3x mb-3"></i>
+                <p class="mb-0">Không có người dùng nào.</p>
+            </div>
+        {{/if}}
+    </div>
+</div>
+<div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="createUserModalLabel">Thêm người dùng mới</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="createUserForm" action="/admin/users/create" method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="newUsername" class="form-label">Tên người dùng</label>
+                        <input type="text" class="form-control" id="newUsername" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">Mật khẩu</label>
+                        <input type="password" class="form-control" id="newPassword" name="password" required>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="isAdmin" name="isAdmin">
+                        <label class="form-check-label" for="isAdmin">
+                            Quyền quản trị viên
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-success">Tạo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="editUserModalLabel">Chỉnh sửa người dùng</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editUserForm" action="/admin/users/update" method="POST">
+                <div class="modal-body">
+                    <input type="hidden" id="editUserId" name="userId">
+                    <div class="mb-3">
+                        <label for="editUsername" class="form-label">Tên người dùng</label>
+                        <input type="text" class="form-control" id="editUsername" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPassword" class="form-label">Mật khẩu mới (để trống nếu không đổi)</label>
+                        <input type="password" class="form-control" id="editPassword" name="password">
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="editIsAdmin" name="isAdmin">
+                        <label class="form-check-label" for="editIsAdmin">
+                            Quyền quản trị viên
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteUserModalLabel">Xác nhận xóa</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa người dùng này? Hành động này không thể hoàn tác.</p>
+                <p>Tất cả bài đăng của người dùng này cũng sẽ bị xóa.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <form id="deleteUserForm" action="/admin/users/delete" method="POST">
+                    <input type="hidden" id="deleteUserId" name="userId">
+                    <button type="submit" class="btn btn-danger">Xóa</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="viewUserModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">Chi tiết người dùng</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="userDetails">
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const editUserBtns = document.querySelectorAll('.edit-user');
+    editUserBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const userId = this.getAttribute('data-id');
+            fetch(`/admin/users/${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const user = data.user;
+                        document.getElementById('editUserId').value = user._id;
+                        document.getElementById('editUsername').value = user.username;
+                        document.getElementById('editIsAdmin').checked = user.isAdmin;
+                    } else {
+                        alert('Không thể tải dữ liệu người dùng');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching user data:', error);
+                    alert('Có lỗi xảy ra khi tải dữ liệu người dùng');
+                });
+        });
+    });
+    const deleteUserBtns = document.querySelectorAll('.delete-user');
+    deleteUserBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const userId = this.getAttribute('data-id');
+            document.getElementById('deleteUserId').value = userId;
+        });
+    });
+    const toggleStatusBtns = document.querySelectorAll('.toggle-status');
+    toggleStatusBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const userId = this.getAttribute('data-id');
+            const action = this.getAttribute('data-action');
+            
+            if (confirm(`Bạn có chắc chắn muốn ${action === 'activate' ? 'kích hoạt' : 'vô hiệu hóa'} người dùng này?`)) {
+                fetch(`/admin/users/${userId}/status`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ action })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.reload();
+                    } else {
+                        alert(data.error || 'Không thể thay đổi trạng thái người dùng');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error toggling user status:', error);
+                    alert('Có lỗi xảy ra khi thay đổi trạng thái người dùng');
+                });
+            }
+        });
+    });
+    const viewUserBtns = document.querySelectorAll('.view-user');
+    viewUserBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const userId = this.getAttribute('data-id');
+            const userDetailsContainer = document.getElementById('userDetails');
+            
+            userDetailsContainer.innerHTML = `
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `;
+            
+            fetch(`/admin/users/${userId}/details`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const user = data.user;
+                        userDetailsContainer.innerHTML = `
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Thông tin cơ bản</h5>
+                                    <ul class="list-group mb-3">
+                                        <li class="list-group-item"><strong>ID:</strong> ${user._id}</li>
+                                        <li class="list-group-item"><strong>Tên người dùng:</strong> ${user.username}</li>
+                                        <li class="list-group-item">
+                                            <strong>Vai trò:</strong> 
+                                            ${user.isAdmin ? 
+                                                '<span class="badge bg-danger">Quản trị viên</span>' : 
+                                                '<span class="badge bg-info">Người dùng</span>'}
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Trạng thái:</strong> 
+                                            ${user.isActive ? 
+                                                '<span class="badge bg-success">Hoạt động</span>' : 
+                                                '<span class="badge bg-secondary">Khóa</span>'}
+                                        </li>
+                                        <li class="list-group-item"><strong>Ngày tạo:</strong> ${new Date(user.createdAt).toLocaleString('vi-VN')}</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Thống kê</h5>
+                                    <ul class="list-group">
+                                        <li class="list-group-item"><strong>Tổng số bài đăng:</strong> ${user.postCount}</li>
+                                        <li class="list-group-item"><strong>Bài đăng được duyệt:</strong> ${user.approvedPostCount}</li>
+                                        <li class="list-group-item"><strong>Bài đăng chờ duyệt:</strong> ${user.pendingPostCount}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <h5>Bài đăng gần đây</h5>
+                                ${user.recentPosts && user.recentPosts.length ? `
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tiêu đề</th>
+                                                    <th>Ngày tạo</th>
+                                                    <th>Trạng thái</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                ${user.recentPosts.map(post => `
+                                                    <tr>
+                                                        <td>${post.title}</td>
+                                                        <td>${new Date(post.createdAt).toLocaleString('vi-VN')}</td>
+                                                        <td>${post.isPending ? 
+                                                            '<span class="badge bg-warning text-dark">Chờ duyệt</span>' : 
+                                                            '<span class="badge bg-success">Đã duyệt</span>'}
+                                                        </td>
+                                                    </tr>
+                                                `).join('')}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                ` : '<p class="text-muted">Không có bài đăng nào.</p>'}
+                            </div>
+                        `;
+                    } else {
+                        userDetailsContainer.innerHTML = `
+                            <div class="alert alert-danger">
+                                Không thể tải dữ liệu người dùng: ${data.error || 'Lỗi không xác định'}
+                            </div>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching user details:', error);
+                    userDetailsContainer.innerHTML = `
+                        <div class="alert alert-danger">
+                            Có lỗi xảy ra khi tải dữ liệu người dùng
+                        </div>
+                    `;
+                });
+        });
+    });
+    const searchBtn = document.getElementById('searchBtn');
+    const userSearch = document.getElementById('userSearch');
+
+    searchBtn.addEventListener('click', () => {
+        const searchTerm = userSearch.value.trim();
+        if (searchTerm) {
+            window.location.href = `/admin/users?search=${encodeURIComponent(searchTerm)}`;
+        } else {
+            window.location.href = '/admin/users';
+        }
+    });
+
+    userSearch.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            searchBtn.click();
+        }
+    });
+});
+</script>

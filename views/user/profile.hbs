@@ -1,0 +1,158 @@
+<div class="row">
+    <!-- User Information Card -->
+    <div class="col-md-4 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-header">
+                <h5 class="m-0"><i class="fas fa-user me-2"></i>Hồ sơ người dùng</h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-3">
+                    <div class="avatar-circle bg-primary mx-auto mb-3">
+                        <span class="avatar-initials">{{user.username.[0]}}</span>
+                    </div>
+                    <h4>{{user.username}}</h4>
+                    <p class="text-muted">
+                        <i class="fas fa-calendar-alt me-1"></i> Tham gia vào {{formatDate user.createdAt}}
+                    </p>
+                </div>
+                <div class="border-top pt-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Tổng số bài đăng:</span>
+                        <span class="fw-bold">{{postStats.total}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Đã được duyệt:</span>
+                        <span class="fw-bold text-success">{{postStats.approved}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Đang chờ duyệt:</span>
+                        <span class="fw-bold text-warning">{{postStats.pending}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-grid">
+                    <a href="/map" class="btn btn-primary">
+                        <i class="fas fa-map-marked-alt me-1"></i> Xem bản đồ
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Settings Card -->
+    <div class="col-md-8">
+        <!-- Change Username Card -->
+        <div class="card shadow mb-4">
+            <div class="card-header">
+                <h5 class="m-0"><i class="fas fa-id-card me-2"></i>Thay đổi tên người dùng</h5>
+            </div>
+            <div class="card-body">
+                <form action="/user/update-username" method="POST">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Khi thay đổi tên người dùng, bạn sẽ bị đăng xuất và cần đăng nhập lại.
+                    </div>
+                    <div class="mb-3">
+                        <label for="currentUsername" class="form-label">Tên người dùng hiện tại</label>
+                        <input type="text" class="form-control" id="currentUsername" value="{{user.username}}" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newUsername" class="form-label">Tên người dùng mới</label>
+                        <input type="text" class="form-control" id="newUsername" name="newUsername" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="passwordForUsername" class="form-label">Xác nhận mật khẩu</label>
+                        <input type="password" class="form-control" id="passwordForUsername" name="password" required>
+                        <div class="form-text">Nhập mật khẩu hiện tại để xác nhận thay đổi.</div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Cập nhật tên người dùng</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Change Password Card -->
+        <div class="card shadow">
+            <div class="card-header">
+                <h5 class="m-0"><i class="fas fa-key me-2"></i>Thay đổi mật khẩu</h5>
+            </div>
+            <div class="card-body">
+                <form action="/user/update-password" method="POST">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Khi thay đổi mật khẩu, bạn sẽ bị đăng xuất và cần đăng nhập lại.
+                    </div>
+                    <div class="mb-3">
+                        <label for="currentPassword" class="form-label">Mật khẩu hiện tại</label>
+                        <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">Mật khẩu mới</label>
+                        <input type="password" class="form-control" id="newPassword" name="newPassword" required minlength="6">
+                        <div class="form-text">Mật khẩu phải có ít nhất 6 ký tự.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Xác nhận mật khẩu mới</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required minlength="6">
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Cập nhật mật khẩu</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <!-- Recent Posts Card -->
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header">
+                <h5 class="m-0"><i class="fas fa-list me-2"></i>Bài đăng gần đây của bạn</h5>
+            </div>
+            <div class="card-body">
+                {{#if recentPosts.length}}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Tiêu đề</th>
+                                <th>Nội dung</th>
+                                <th>Trạng thái</th>
+                                <th>Ngày tạo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each recentPosts}}
+                            <tr>
+                                <td>{{this.title}}</td>
+                                <td>{{truncate this.content 50}}</td>
+                                <td>
+                                    {{#if this.isPending}}
+                                    <span class="badge bg-warning text-dark">Chờ duyệt</span>
+                                    {{else}}
+                                    <span class="badge bg-success">Đã duyệt</span>
+                                    {{/if}}
+                                </td>
+                                <td>{{formatDate this.createdAt}}</td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+                {{else}}
+                <div class="text-center py-4">
+                    <i class="fas fa-map-pin text-muted fa-2x mb-3"></i>
+                    <p>Bạn chưa có bài đăng nào.</p>
+                    <a href="/map" class="btn btn-primary">
+                        <i class="fas fa-plus-circle me-1"></i> Tạo bài đăng mới
+                    </a>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</div>
